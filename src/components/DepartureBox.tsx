@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import { useDepartures } from '../hooks/useDepartures';
 import type { Site, Departure, TransportMode, Thresholds } from '../types/sl';
 
@@ -52,14 +53,31 @@ function groupByMode(departures: Departure[]): Map<TransportMode, Departure[]> {
 
 export function DepartureBox({ site, onRemove, thresholds }: Props) {
   const { departures, loading, error, lastUpdated } = useDepartures(site.id);
-  const color = boxColor(departures, thresholds);
-  const grouped = groupByMode(departures);
+  const [selectedDirection, setSelectedDirection] = useState<string | null>(null);
+
+  const directions = [...new Set(departures.map((d) => d.direction))].sort();
+  const filtered = selectedDirection ? departures.filter((d) => d.direction === selectedDirection) : departures;
+
+  const color = boxColor(filtered, thresholds);
+  const grouped = groupByMode(filtered);
   const presentModes = MODE_ORDER.filter((m) => grouped.has(m));
 
   return (
     <div className={`departure-box departure-box--${color}`}>
       <div className="departure-box__header">
         <h2 className="departure-box__title">{site.name}</h2>
+        {directions.length > 1 && (
+          <select
+            className="departure-box__direction-filter"
+            value={selectedDirection ?? ''}
+            onChange={(e) => setSelectedDirection(e.target.value || null)}
+          >
+            <option value="">Alla riktningar</option>
+            {directions.map((d) => (
+              <option key={d} value={d}>{d}</option>
+            ))}
+          </select>
+        )}
         <button className="remove-btn" onClick={() => onRemove(site.id)} aria-label="Remove">
           ✕
         </button>

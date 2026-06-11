@@ -212,8 +212,29 @@
 .departure-box__header {
   display: flex;
   justify-content: space-between;
-  align-items: flex-start;
+  align-items: center;
+  gap: 0.5rem;
   margin-bottom: 0.85rem;
+}
+
+.departure-box__direction-filter {
+  flex: 1;
+  min-width: 0;
+  padding: 0.25rem 0.5rem;
+  background: #1e1e30;
+  border: 1px solid #334155;
+  border-radius: 6px;
+  color: #94a3b8;
+  font-size: 0.75rem;
+  outline: none;
+  cursor: pointer;
+  transition: border-color 0.15s;
+}
+
+.departure-box__direction-filter:hover,
+.departure-box__direction-filter:focus {
+  border-color: #6366f1;
+  color: #f1f5f9;
 }
 
 .departure-box__title {
